@@ -1,3 +1,6 @@
+console.log('USER JS LOADED - PDF FIX VERSION');
+
+
 async function verifyCert() {
   const roll = document.getElementById('roll').value.trim();
 
