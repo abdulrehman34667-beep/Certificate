@@ -18,7 +18,19 @@ async function verifyCert() {
     return;
   }
 
-  document.getElementById('result').innerHTML = `
-    <img src="${data.image_url}" style="max-width:100%;border:1px solid #ccc"/>
-  `;
+  const url = data.image_url;
+  const isPDF = url.toLowerCase().endsWith('.pdf');
+
+  if (isPDF) {
+    document.getElementById('result').innerHTML = `
+      <iframe src="${url}" width="100%" height="500px"
+        style="border:1px solid #ccc"></iframe>
+      <br><br>
+      <a href="${url}" target="_blank">⬇ Download PDF</a>
+    `;
+  } else {
+    document.getElementById('result').innerHTML = `
+      <img src="${url}" style="max-width:100%;border:1px solid #ccc"/>
+    `;
+  }
 }
