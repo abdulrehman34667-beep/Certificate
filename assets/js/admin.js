@@ -1,25 +1,39 @@
+/* 🔐 Admin Protection */
 if (!sessionStorage.getItem('admin')) {
-  location.href = 'index.html';
+  location.href = '/admin/index.html';
 }
 
+/* 📤 Upload Certificate */
 async function uploadCert() {
   console.log('Upload function triggered');
 
-  const roll = document.getElementById('roll_no').value.trim();
-  const file = document.getElementById('image').files[0];
+  const studentName = document
+    .getElementById('student_name')
+    .value
+    .trim();
 
-  if (!roll || !file) {
-    alert('Roll & image required');
+  const roll = document
+    .getElementById('roll_no')
+    .value
+    .trim();
+
+  const file = document
+    .getElementById('image')
+    .files[0];
+
+  if (!studentName || !roll || !file) {
+    alert('Student name, roll number & file required');
     return;
   }
 
   const ext = file.name.split('.').pop();
-  const filePath = `${roll}.${ext}`; // ✅ FIXED PATH
+  const filePath = `${roll}.${ext}`;
 
-  // 1️⃣ Upload to Storage
-  const { error: uploadError } = await window.supabaseClient.storage
-    .from('certificates')
-    .upload(filePath, file, { upsert: true });
+  /* 1️⃣ Upload to Supabase Storage */
+  const { error: uploadError } =
+    await window.supabaseClient.storage
+      .from('certificates')
+      .upload(filePath, file, { upsert: true });
 
   if (uploadError) {
     console.error(uploadError);
@@ -27,23 +41,26 @@ async function uploadCert() {
     return;
   }
 
-  // 2️⃣ Get Public URL
-  const { data: urlData } = window.supabaseClient.storage
-    .from('certificates')
-    .getPublicUrl(filePath);
+  /* 2️⃣ Get Public URL */
+  const { data: urlData } =
+    window.supabaseClient.storage
+      .from('certificates')
+      .getPublicUrl(filePath);
 
-  if (!urlData?.publicUrl) {
+  if (!urlData || !urlData.publicUrl) {
     alert('Public URL not generated');
     return;
   }
 
-  // 3️⃣ Insert into table
-  const { error: insertError } = await window.supabaseClient
-    .from('certificates')
-    .insert({
-      roll_no: roll,
-      image_url: urlData.publicUrl
-    });
+  /* 3️⃣ Insert into Database */
+  const { error: insertError } =
+    await window.supabaseClient
+      .from('certificates')
+      .insert({
+        student_name: studentName,
+        roll_no: roll,
+        image_url: urlData.publicUrl
+      });
 
   if (insertError) {
     console.error(insertError);
@@ -52,14 +69,21 @@ async function uploadCert() {
   }
 
   alert('Certificate Added Successfully ✅');
+
+  /* clear form */
+  document.getElementById('student_name').value = '';
+  document.getElementById('roll_no').value = '';
+  document.getElementById('image').value = '';
 }
 
+/* 🚪 Logout */
 function logout() {
   sessionStorage.clear();
   window.supabaseClient.auth.signOut();
-  location.href = 'index.html';
+  location.href = '/admin/index.html';
 }
 
+/* 📋 Load All Students */
 async function loadStudents() {
   const table = document.getElementById('studentsTable');
   table.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
@@ -88,10 +112,9 @@ async function loadStudents() {
     table.innerHTML += `
       <tr>
         <td>${index + 1}</td>
-        <td>${stu.student_name ?? '-'}</td>
+        <td>${stu.student_name || '-'}</td>
         <td>${stu.roll_no}</td>
       </tr>
     `;
   });
 }
-
