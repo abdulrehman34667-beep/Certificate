@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
@@ -8,18 +9,33 @@
 
 <div class="container">
   <h3>Admin Dashboard</h3>
-  <button onclick="logout()" style="background:red;color:white;">Logout</button>
-  <hr>
-  <input type="text" id="roll_no" placeholder="Roll No">
-  <input type="file" id="image">
-  <button onclick="uploadCert()">Upload Certificate</button>
 
+  <button onclick="logout()" style="background:red;color:white;">
+    Logout
+  </button>
+
+  <hr>
+
+  <!-- 🔹 Student Name -->
+  <input type="text" id="student_name" placeholder="Student Name">
+
+  <!-- 🔹 Roll Number -->
+  <input type="text" id="roll_no" placeholder="Roll Number">
+
+  <!-- 🔹 Certificate File -->
+  <input type="file" id="image" accept=".pdf,.jpg,.png">
+
+  <button onclick="uploadCert()">Upload Certificate</button>
 </div>
- <h2>All Students</h2>
+
+<hr>
+
+<h2>All Students</h2>
 
 <button onclick="loadStudents()">Load All Students</button>
 
-<table border="1" cellpadding="8" cellspacing="0" style="margin-top:15px;width:100%">
+<table border="1" cellpadding="8" cellspacing="0"
+       style="margin-top:15px;width:100%">
   <thead>
     <tr>
       <th>#</th>
@@ -32,8 +48,7 @@
   </tbody>
 </table>
 
-
-
+<!-- 🔹 Scripts (ORDER VERY IMPORTANT) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/js/supabase.js"></script>
 <script src="../assets/js/admin.js"></script>
