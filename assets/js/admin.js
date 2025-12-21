@@ -118,3 +118,37 @@ async function loadStudents() {
     `;
   });
 }
+
+/* ❌ Delete Student */
+async function deleteStudent() {
+  const roll = document.getElementById('delete_roll_no').value.trim();
+
+  if (!roll) {
+    alert('Please enter Roll Number');
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to delete student with Roll No: ${roll}?`)) {
+    return;
+  }
+
+  // Delete from table
+  const { error: deleteError } = await window.supabaseClient
+    .from('certificates')
+    .delete()
+    .eq('roll_no', roll);
+
+  if (deleteError) {
+    console.error(deleteError);
+    alert('Failed to delete student: ' + deleteError.message);
+    return;
+  }
+
+  alert(`Student with Roll No ${roll} deleted successfully ✅`);
+
+  // Clear input
+  document.getElementById('delete_roll_no').value = '';
+
+  // Refresh student list
+  loadStudents();
+}
