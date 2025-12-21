@@ -59,3 +59,39 @@ function logout() {
   window.supabaseClient.auth.signOut();
   location.href = 'index.html';
 }
+
+async function loadStudents() {
+  const table = document.getElementById('studentsTable');
+  table.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+
+  const { data, error } = await window.supabaseClient
+    .from('certificates')
+    .select('student_name, roll_no')
+    .order('roll_no', { ascending: true });
+
+  if (error) {
+    console.error(error);
+    table.innerHTML =
+      '<tr><td colspan="3" style="color:red">Failed to load students</td></tr>';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    table.innerHTML =
+      '<tr><td colspan="3">No students found</td></tr>';
+    return;
+  }
+
+  table.innerHTML = '';
+
+  data.forEach((stu, index) => {
+    table.innerHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${stu.student_name ?? '-'}</td>
+        <td>${stu.roll_no}</td>
+      </tr>
+    `;
+  });
+}
+
