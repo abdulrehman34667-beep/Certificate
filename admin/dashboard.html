@@ -15,6 +15,24 @@
   <button onclick="uploadCert()">Upload Certificate</button>
 
 </div>
+ <h2>All Students</h2>
+
+<button onclick="loadStudents()">Load All Students</button>
+
+<table border="1" cellpadding="8" cellspacing="0" style="margin-top:15px;width:100%">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Student Name</th>
+      <th>Roll Number</th>
+    </tr>
+  </thead>
+  <tbody id="studentsTable">
+    <!-- data yahan aay ga -->
+  </tbody>
+</table>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/js/supabase.js"></script>
