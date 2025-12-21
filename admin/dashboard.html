@@ -16,22 +16,24 @@
 
   <hr>
 
-  <!-- 🔹 Student Name -->
+  <!-- 🔹 Upload New Student / Certificate -->
+  <h4>Upload New Student</h4>
   <input type="text" id="student_name" placeholder="Student Name">
-
-  <!-- 🔹 Roll Number -->
   <input type="text" id="roll_no" placeholder="Roll Number">
-
-  <!-- 🔹 Certificate File -->
   <input type="file" id="image" accept=".pdf,.jpg,.png">
-
   <button onclick="uploadCert()">Upload Certificate</button>
 </div>
 
 <hr>
 
-<h2>All Students</h2>
+<!-- 🔹 Delete Student -->
+<h3>Delete Student</h3>
+<input type="text" id="delete_roll_no" placeholder="Roll Number to Delete">
+<button onclick="deleteStudent()" style="background:red;color:white;">Delete Student</button>
 
+<hr>
+
+<h2>All Students</h2>
 <button onclick="loadStudents()">Load All Students</button>
 
 <table border="1" cellpadding="8" cellspacing="0"
