@@ -7,26 +7,16 @@ if (!sessionStorage.getItem('admin')) {
 async function uploadCert() {
   console.log('Upload function triggered');
 
-  const studentName = document
-    .getElementById('student_name')
-    .value
-    .trim();
-
-  const roll = document
-    .getElementById('roll_no')
-    .value
-    .trim();
-
-  const file = document
-    .getElementById('image')
-    .files[0];
+  const studentName = document.getElementById('student_name').value.trim();
+  const roll = document.getElementById('roll_no').value.trim();
+  const file = document.getElementById('image').files[0];
 
   if (!studentName || !roll || !file) {
     alert('Student name, roll number & file required');
     return;
   }
 
-  const ext = file.name.split('.').pop();
+  const ext = file.name.split('.').pop().toLowerCase();
   const filePath = `${roll}.${ext}`;
 
   /* 1️⃣ Upload to Supabase Storage */
@@ -83,37 +73,48 @@ function logout() {
   location.href = '/admin/index.html';
 }
 
-/* 📋 Load All Students */
+/* 📋 Load All Students (WITH CERTIFICATE PREVIEW) */
 async function loadStudents() {
   const table = document.getElementById('studentsTable');
-  table.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+  table.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
 
   const { data, error } = await window.supabaseClient
     .from('certificates')
-    .select('student_name, roll_no')
+    .select('student_name, roll_no, image_url')
     .order('roll_no', { ascending: true });
 
   if (error) {
     console.error(error);
     table.innerHTML =
-      '<tr><td colspan="3" style="color:red">Failed to load students</td></tr>';
+      '<tr><td colspan="4" style="color:red">Failed to load students</td></tr>';
     return;
   }
 
   if (!data || data.length === 0) {
     table.innerHTML =
-      '<tr><td colspan="3">No students found</td></tr>';
+      '<tr><td colspan="4">No students found</td></tr>';
     return;
   }
 
   table.innerHTML = '';
 
   data.forEach((stu, index) => {
+    const url = stu.image_url || '';
+    const isPdf = url.toLowerCase().endsWith('.pdf');
+
+    const previewHtml = isPdf
+      ? `<a href="${url}" target="_blank">📄 PDF Preview</a>`
+      : `<a href="${url}" target="_blank">
+           <img src="${url}"
+                style="width:40px;height:40px;object-fit:cover;border:1px solid #ccc">
+         </a>`;
+
     table.innerHTML += `
       <tr>
         <td>${index + 1}</td>
         <td>${stu.student_name || '-'}</td>
         <td>${stu.roll_no}</td>
+        <td>${previewHtml}</td>
       </tr>
     `;
   });
@@ -132,23 +133,18 @@ async function deleteStudent() {
     return;
   }
 
-  // Delete from table
-  const { error: deleteError } = await window.supabaseClient
+  const { error } = await window.supabaseClient
     .from('certificates')
     .delete()
     .eq('roll_no', roll);
 
-  if (deleteError) {
-    console.error(deleteError);
-    alert('Failed to delete student: ' + deleteError.message);
+  if (error) {
+    console.error(error);
+    alert('Failed to delete student: ' + error.message);
     return;
   }
 
   alert(`Student with Roll No ${roll} deleted successfully ✅`);
-
-  // Clear input
   document.getElementById('delete_roll_no').value = '';
-
-  // Refresh student list
   loadStudents();
 }
