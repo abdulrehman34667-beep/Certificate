@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Certificate Verification</title>
+
+<style>
+:root{ --green:#079560; --green-dark:#067646; }
+*{box-sizing:border-box;}
+body{
+  margin:0;font-family:Inter,sans-serif;
+  background:#fff;color:#111;min-height:100vh;
+  display:flex;flex-direction:column;font-size:16px;
+}
+
+/* HEADER */
+header{
+  background:#000;color:var(--green);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px;
+  font-size:30px;
+}
+.brand{font-weight:700;color:var(--green);}
+
+/* CONTACT */
+.contact-box{}
+.contact-btn{
+  width:150px;                
+  padding:14px;                
+  font-size:18px;              
+  background:var(--green);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+  text-align:center;
+  display:inline-block;
+  text-decoration:none;
+}
+.contact-btn:hover{background:var(--green-dark);}
+
+/* MAIN */
+.main{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.verify-box{
+  width:100%;max-width:460px;
+  background:#f7f7f8;padding:28px;border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  text-align:center;
+}
+.verify-box h2{color:var(--green);font-size:30px;margin-bottom:18px;}
+
+input{
+  width:100%;padding:14px;border-radius:8px;
+  border:1px solid #d0d0d0;font-size:16px;margin-bottom:12px;
+  text-align:center;
+}
+button{
+  width:50%;padding:18px;font-size:18px;
+  background:var(--green);color:#fff;border:none;
+  border-radius:8px;font-weight:700;cursor:pointer;
+}
+button:hover{background:var(--green-dark);}
+
+.cert-img{
+  max-width:100%;margin-top:16px;border-radius:8px;
+  box-shadow:0 6px 14px rgba(0,0,0,.06);
+}
+
+/* FOOTER */
+footer{
+  background:#000;color:var(--green);
+  text-align:center;padding:14px 15px;font-size:20px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  header{font-size:20px;}
+  .verify-box h2{font-size:20px;}
+  button{font-size:18px;}
+  .contact-btn{width:130px;}   /*  mobile balance */
+  footer{font-size:15px;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">Islamia Future Tech</div>
+
+  <div class="contact-box">
+    <a href="https://wa.me/923414808170" target="_blank" class="contact-btn">
+      Contact Us
+    </a>
+  </div>
+</header>
+
+<main class="main">
+  <section class="verify-box">
+    <h2>Search By Student ID</h2>
+    <input type="text" id="searchCode" id="roll" placeholder="Enter Student ID">
+    <button onclick="searchCert()">Search</button>
+    <div id="certificateDisplay" id="result"></div>
+  </section>
+</main>
+
+<footer>
+  All rights reserved by Islamia Future Tech
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/user.js"></script>
+
+<script>
+const STORAGE_KEY='ift_certificates';
+
+function readData(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}
+  catch(e){return [];}
+}
+
+function searchCert(){
+  const code=document.getElementById('searchCode').value.trim();
+  const data=readData();
+  const found=data.find(r=>r.code===code);
+  const box=document.getElementById('certificateDisplay');
+
+  if(!found){
+    box.innerHTML='<p style="color:red;font-weight:600">Certificate not found</p>';
+    return;
+  }
+
+  box.innerHTML=`
+    <h3>${found.name}</h3>
+    <p><b>Code:</b> ${found.code}</p>
+    <img src="${found.imageBase64}" class="cert-img">
+  `;
+}
+</script>
+
+</body>
+</html>
