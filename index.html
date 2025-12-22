@@ -119,32 +119,8 @@ footer{
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/user.js"></script>
 
-<script>
-const STORAGE_KEY='ift_certificates';
 
-function readData(){
-  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}
-  catch(e){return [];}
-}
-
-function searchCert(){
-  const code=document.getElementById('searchCode').value.trim();
-  const data=readData();
-  const found=data.find(r=>r.code===code);
-  const box=document.getElementById('certificateDisplay');
-
-  if(!found){
-    box.innerHTML='<p style="color:red;font-weight:600">Certificate not found</p>';
-    return;
-  }
-
-  box.innerHTML=`
-    <h3>${found.name}</h3>
-    <p><b>Code:</b> ${found.code}</p>
-    <img src="${found.imageBase64}" class="cert-img">
-  `;
-}
-</script>
 
 </body>
 </html>
+
