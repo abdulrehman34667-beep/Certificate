@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Islamia Future Tech — Admin Panel</title>
+
+<style>
+:root{--green:#079560;--green-dark:#067646}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:#fff;
+  min-height:100vh;
+}
+
+/* HEADER */
+header{
+  background:#000;
+  color:var(--green);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  font-size:28px;
+}
+.brand{font-weight:700}
+
+/* LOGIN */
+#loginBox{
+  max-width:420px;
+  margin:60px auto;
+  text-align:center;
+}
+#loginBox h2{
+  color:var(--green);
+  margin-bottom:20px;
+}
+#loginBox input{
+  width:100%;
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+#loginBox button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:8px;
+  background:var(--green);
+  color:#fff;
+  font-weight:700;
+}
+
+/* PANEL */
+.admin-panel{
+  display:none;
+  padding:20px;
+}
+.admin-content{
+  max-width:900px;
+  margin:auto;
+  display:flex;
+  gap:20px;
+}
+.left-menu{
+  width:220px;
+  background:#f1f1f1;
+  padding:12px;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.left-menu button{
+  padding:14px;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+}
+.left-menu button:hover{background:#eaf8ed;color:var(--green)}
+.logout-btn{background:#eee}
+
+.right-content{
+  flex:1;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+/* FORMS */
+.right-content input{
+  width:100%;
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+.right-content button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:8px;
+  font-weight:700;
+}
+.save{background:var(--green);color:#fff}
+.delete{background:#e74c3c;color:#fff}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:10px;text-align:left}
+th{background:#f1f1f1}
+
+@media(max-width:768px){
+  .admin-content{flex-direction:column}
+  .left-menu{width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">Islamia Future Tech</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<!-- 🔐 LOGIN -->
+<div id="loginBox">
+  <h2>Admin Login</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- 📊 DASHBOARD -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-content">
+    <div class="left-menu">
+      <button onclick="loadStudents()">All Students</button>
+      <button onclick="showAdd()">Add Student</button>
+      <button onclick="showDelete()">Delete Student</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="right-content" id="panel">
+      <h3>Upload Certificate</h3>
+      <input id="student_name" placeholder="Student Name">
+      <input id="roll_no" placeholder="Roll Number">
+      <input id="image" type="file" accept=".pdf,.jpg,.jpeg,.png">
+      <button class="save" onclick="uploadCert()">Upload Certificate</button>
+
+      <hr>
+
+      <h3>Delete Student</h3>
+      <input id="delete_roll_no" placeholder="Roll Number">
+      <button class="delete" onclick="deleteStudent()">Delete Student</button>
+
+      <hr>
+
+      <button onclick="loadStudents()">Load All Students</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Roll</th>
+            <th>Certificate</th>
+          </tr>
+        </thead>
+        <tbody id="studentsTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 🔹 JS (UNCHANGED FILES) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/admin-auth.js"></script>
+<script src="../assets/js/admin.js"></script>
+
+<script>
+/* UI ONLY */
+if(sessionStorage.getItem('admin')){
+  loginBox.style.display='none';
+  adminPanel.style.display='block';
+  loadStudents();
+}else{
+  loginBox.style.display='block';
+  adminPanel.style.display='none';
+}
+</script>
+
+</body>
+</html>
