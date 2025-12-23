@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard</title>
+
+<style>
+:root{--green:#079560;--green-dark:#067646}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:#fff;
+}
+
+/* HEADER */
+header{
+  background:#000;
+  color:var(--green);
+  padding:14px 20px;
+  font-size:26px;
+}
+.brand{font-weight:700}
+
+/* LAYOUT */
+.admin-panel{padding:20px}
+.admin-content{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  gap:20px;
+}
+
+/* =======================
+   ASIDE MENU BUTTONS
+   ======================= */
+.left-menu{
+  width:220px;
+  background:#f1f1f1;
+  padding:12px;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.aside-btn{
+  padding:12px 14px;        /* 👈 SIZE CONTROL (aside buttons) */
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+  text-align:left;
+  background:transparent;
+}
+
+.aside-btn:hover,
+.aside-btn.active{
+  background:#eaf8ed;
+  color:var(--green);
+}
+
+/* CONTENT */
+.right-content{
+  flex:1;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+/* SECTIONS */
+.section{display:none}
+.section.active{display:block}
+
+/* INPUTS */
+input{
+  width:100%;
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+/* =======================
+   SECTION BUTTONS
+   ======================= */
+.section-btn{
+  padding:8px 16px;         /* 👈 SIZE CONTROL (section buttons) */
+  border:none;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:14px;
+}
+
+/* VARIANTS */
+.load-btn{
+  background:#eaf8ed;
+  color:var(--green);
+  margin-bottom:12px;
+}
+
+.save{
+  background:var(--green);
+  color:#fff;
+}
+
+.delete{
+  background:#e74c3c;
+  color:#fff;
+}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:10px}
+th{background:#f1f1f1}
+
+@media(max-width:768px){
+  .admin-content{flex-direction:column}
+  .left-menu{width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">Islamia Future Tech</div>
+</header>
+
+<div class="admin-panel">
+  <div class="admin-content">
+
+    <!-- ASIDE MENU -->
+    <div class="left-menu">
+      <button class="aside-btn active"
+        onclick="showSection('students', this)">All Students</button>
+
+      <button class="aside-btn"
+        onclick="showSection('upload', this)">Upload Student</button>
+
+      <button class="aside-btn"
+        onclick="showSection('delete', this)">Delete Student</button>
+
+      <button class="aside-btn"
+        onclick="showSection('logout', this)">Logout</button>
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="right-content">
+
+      <!-- ALL STUDENTS -->
+      <div id="students" class="section active">
+        <h3>All Students</h3>
+        <button class="section-btn load-btn"
+          onclick="loadStudents()">Load Students</button>
+
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Roll</th>
+              <th>Certificate</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTable"></tbody>
+        </table>
+      </div>
+
+      <!-- UPLOAD -->
+      <div id="upload" class="section">
+        <h3>Upload Certificate</h3>
+        <input id="student_name" placeholder="Student Name">
+        <input id="roll_no" placeholder="Roll Number">
+        <input id="image" type="file" accept=".pdf,.jpg,.jpeg,.png">
+        <button class="section-btn save"
+          onclick="uploadCert()">Upload Certificate</button>
+      </div>
+
+      <!-- DELETE -->
+      <div id="delete" class="section">
+        <h3>Delete Student</h3>
+        <input id="delete_roll_no" placeholder="Roll Number">
+        <button class="section-btn delete"
+          onclick="deleteStudent()">Delete Student</button>
+      </div>
+
+      <!-- LOGOUT -->
+      <div id="logout" class="section">
+        <h3>Logout</h3>
+        <p>Are you sure you want to logout?</p>
+        <button class="section-btn delete"
+          onclick="logout()">Confirm Logout</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- JS (UNCHANGED) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/admin.js"></script>
+
+<script>
+function showSection(id, btn){
+  document.querySelectorAll('.section')
+    .forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  document.querySelectorAll('.aside-btn')
+    .forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if(id === 'students') loadStudents();
+}
+
+/* default */
+loadStudents();
+</script>
+
+</body>
+</html>
