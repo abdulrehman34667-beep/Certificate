@@ -22,5 +22,5 @@ async function login() {
   sessionStorage.setItem('admin', 'true');
 
   // redirect to dashboard
-  location.href = 'admin/index.html';
+  location.href = 'admin/dashboard.html';
 }
