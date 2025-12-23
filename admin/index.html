@@ -24,6 +24,7 @@ header{
   text-align:center;
 }
 #loginBox h2{color:var(--green)}
+
 #loginBox input{
   width:100%;
   padding:14px;
@@ -31,6 +32,21 @@ header{
   border-radius:8px;
   border:1px solid #ccc;
 }
+
+/* Password box */
+.password-box{
+  position:relative;
+}
+.toggle-eye{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:18px;
+}
+
+/* Login button */
 #loginBox button{
   width:100%;
   padding:14px;
@@ -39,6 +55,10 @@ header{
   background:var(--green);
   color:#fff;
   font-weight:700;
+  cursor:pointer;
+}
+#loginBox button:hover{
+  opacity:0.9;
 }
 </style>
 </head>
@@ -49,14 +69,35 @@ header{
 
 <div id="loginBox">
   <h2>Admin Login</h2>
+
   <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
+
+  <div class="password-box">
+    <input type="password" id="password" placeholder="Password">
+    <span class="toggle-eye" onclick="togglePassword()">👁️</span>
+  </div>
+
   <button onclick="login()">Login</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/js/supabase.js"></script>
 <script src="../assets/js/admin-auth.js"></script>
+
+<script>
+function togglePassword(){
+  const pass = document.getElementById("password");
+  const eye = document.querySelector(".toggle-eye");
+
+  if(pass.type === "password"){
+    pass.type = "text";
+    eye.innerText = "🙈";
+  }else{
+    pass.type = "password";
+    eye.innerText = "👁️";
+  }
+}
+</script>
 
 </body>
 </html>
